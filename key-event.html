@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Evénements Clavier</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $ball = $("#ball");
+
+
+            $(document).keydown(function () {
+                console.log("touche enfoncée");
+            })
+            /*
+                        $(document).keyup(function (event) {
+                            console.log("touche relachée");
+                            console.log(event);
+                            if (event.key == "ArrowUp") {
+                                console.log("En Avant");
+                            } else {
+                                console.log("En arrière");
+                            }
+                        })
+            
+                    });*/
+
+            $(document).keydown(function (event) {
+                var top = $ball.css("top").replace("px", "")-0;
+                console.log(top);
+                console.log(event.key);
+                if (event.key == "ArrowUp") {
+                    $ball.css("top", (top - 5) + "px");
+                } else if (event.key == "ArrowDown") {
+                    $ball.css("top", (top + 5) + "px");
+                }
+                var left = $ball.css("left").replace("px", "")-0;
+                console.log(left);
+                console.log(event.key);
+                if (event.key == "ArrowLeft") {
+                    $ball.css("left", (left - 5) + "px");
+                } else if (event.key == "ArrowRight") {
+                    $ball.css("left", (left + 5) + "px");
+                }
+
+            })
+
+
+          //  $(document).keydown(function (event) {
+      
+
+            //})
+
+        });
+
+    </script>
+    <style>
+        #ball {
+
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: red;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <div id="ball"></div>
+
+
+
+
+</body>
+
+</html>

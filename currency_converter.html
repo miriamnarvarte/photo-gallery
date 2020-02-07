@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Conversion de divisesDocument</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        //URL du service que permet de recuperer le taux de change
+        const API_URL = "https://api.ratesapi.io/api/latest?";
+        //la divise de entree
+        var baseCurrency = "EUR";
+
+        $(document).ready(function () {
+            //definition de cibles
+            $form = $("#form");
+            $input = $("#euroAmount");
+            $output = $("#results");
+            $currencyChoice = $("#currencyChoice");
+
+            function convertCurrency(event) {
+                event.preventDefault();
+
+                //Recuperation des donnes
+                var euro = $input.val();
+                var currencyCode = $currencyChoice.val();
+
+                if (euro > 0 && currencyCode != "") {
+
+                    var requestUrl = API_URL + "base" + baseCurrency + "&symbols=" + currencyCode;
+                    var output = "";
+                    $.get(requestUrl)
+                        .done(function (data) {
+                            var rate = data.rates[currencyCode];
+                            output = euro * rate;
+                        })
+                        .fail(function (err) {
+                            console.log(err)
+                            output = "impossible de convertir cette monnaie";
+                        })
+                        .always(function () {
+                            $output.text(output);
+                        });
+                }
+            }
+            $form.submit(convertCurrency);
+            $currencyChoice.change(convertCurrency);
+            $input.keyup(convertCurrency);
+        });
+
+
+    </script>
+
+
+</head>
+
+<body class="container-fluid">
+    <div class="row justify-content-center mt-4">
+        <div class="col-4">
+            <h1>Conversion de divises</h1>
+            <form method="post">
+                <div class="form-group">
+                    <input type="number" id="euroAmount" placeholder="Montant en Euro" class="form-control">
+                </div>
+                <div class="form-group">
+                    <select id="currencyChoice" class="form-control">
+                        <option value="">Choissisez une divise</option>
+                        <option value="USD">Dollars américains</option>
+                        <option value="CAD">Dollars canadiens</option>
+                        <option value="JPY">Yen Japonais</option>
+                        <option value="CNY">Yuans chinois</option>
+                    </select>
+
+                </div>
+                <button type="submit">Convertir</button>
+            </form>
+
+
+            <div id="results"></div>
+
+        </div>
+    </div>
+</body>
+
+</html>

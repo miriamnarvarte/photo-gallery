@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Galerie de photo</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        //source des données
+        var imageList = [
+            "photo_1.jpg",
+            "photo_2.jpg",
+            "photo_3.jpg",
+            "photo_4.jpg",
+            "photo_5.jpg",
+            "photo_6.jpg"
+        ];
+
+        //Positions de l'image en cours
+        var currentImagePosition = 0;
+
+        //funtion cargée d'afficher l'image
+        function displayImage($imageElement, pos) {
+
+            //modification de la propiete src de l'image
+            $imageElement.attr("src", "photos/" + imageList[pos]);
+            var positionText = `image ${currentImagePosition + 1} sur ${imageList.length}`
+            $positionDiv.text(positionText);
+        }
+
+
+        $(document).ready(function () {
+            //ciblage des elements
+            $nextButton = $("#nextButton");
+            $prevButton = $("#prevButton");
+            $image = $("#photo");
+            $positionDiv = $("#position");
+            $info = $("#info");
+
+
+
+            $nextButton.click(function () {
+                if (currentImagePosition >= imageList.length - 1) {
+                    currentImagePosition = 0;
+                } else {
+                    currentImagePosition++;
+                }
+
+                displayImage($image, currentImagePosition);
+            });
+
+            $prevButton.click(function () {
+                if (currentImagePosition == 0) {
+                    currentImagePosition = imageList.length - 1;
+                } else {
+                    currentImagePosition--;
+                }
+
+                displayImage($image, currentImagePosition);
+            });
+            $image.mouseover(function (event) {
+
+                $(this).css("opacity", ".5");
+                $info.show();
+                $info.css({
+                    "top": event.clientY + "px",
+                    "left": event.clientx + "px"
+                });
+            });
+
+            $image.mouseout(function () {
+                $(this).css("opacity", "1");
+                $info.hide();
+            });
+
+            //affichage de l'image au chargement
+            displayImage($image, currentImagePosition);
+
+            //masquage de la zone info aur chargament
+            $info.hide();
+
+
+
+            $image.mousemove(function () {
+                $info.css({
+                    "top": event.clientY + "px",
+                    "left": event.clientX + "px"
+                });
+
+            });
+        });
+
+    </script>
+    <style>
+        #info {
+
+            background-color: burlywood;
+            text-align: center;
+            padding: 20px;
+            width: 200px;
+            border-radius: 15px;
+            box-shadow: 3px 3px 3px black;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">Hello</div>
+    <button type="button" id="prevButton">&lt;&lt</button>
+    <div id="position"></div>
+    <button type="button" id="nextButton">&gt;&gt</button>
+    <div>
+        <img id="photo">
+    </div>
+</body>
+
+</html>
