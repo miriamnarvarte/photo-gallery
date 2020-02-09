@@ -5,54 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Formulaire</title>
+    <title>Utilisateur aléatoire</title>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
-
-
     <script>
-        //1: Lancement du DOM
-        $(document).ready(function () {
-
+        $(document).ready(function() {
             var $infos = $("#infos");
 
-            //2: Récupération des données d'un utilisateur aléatoire..
-            //..depuis le serveur randomuser.me
+            //Récupération des données d'un utilisateur aléatoire
+            //depuis le serveur randomuser.me
             const API_URL = "https://randomuser.me/api?";
 
             var user;
 
-
-            //3: Définition des cibles de l'application
+            //Définition des cibles de l'application
             var $form = $("form");
             var $nationality = $("#nationality");
 
-            //4: Capture de l'événement submit sur le formulaire
-            $form.submit(function (event) {
-                //5: Empêche l'envoi du formulaire
+            //capture de l'événement submit sur le formulaire
+            $form.submit(function(event) {
+                //Empêche l'envoi du formulaire
                 event.preventDefault();
 
-                //6: Récupération de la valeur de la case cochée
+                //Récupération de la valeur de la case cochée
                 var gender = $(":checked").val();
 
-                //7: Récupération du choix de la nationalité
+                //Récupération du choix de la nationalité
                 var nationality = $nationality.val();
 
-                //11: Récupération du nombre d'utilisateurs demandé
+                //récupération du nombre d'utilisateurs demandé
                 var numberOfResults = $("#numberOfResults").val();
 
-                //8: Créer les valeurs de l'URL
-                //var requestUrl = API_URL + "gender=" + gender + "&nat=" + nationality;
+                //var requestUrl = API_URL+ "gender=" + gender + "&nat=" + nationality;
                 var requestUrl = `${API_URL}gender=${gender}&nat=${nationality}&results=${numberOfResults}`;
 
-
-                //9: Appel ajax
-                $.get(requestUrl, function (response) {
-                    console.log(response)
+                //appel ajax
+                $.get(requestUrl, function(response) {
+                    console.log(response);
                     user = response.results[0];
 
-                   
-
-                    //10: Récupération du nom et prénom
                     $infos.children()
                         .first()
                         .text(user.name.first + " " + user.name.last)
@@ -63,53 +53,52 @@
                     var $tbody = $("tbody");
                     var $template = $("#rowTemplate");
 
-                    //nouveau Tbody qui remplace le tbody
-                    var $newTbody = $("<body> </tbody>");
+                    //Nouveau tbody qui remplacera l'ancien
+                    var $newTbody = $("<tbody></tbody>");
                     $newTbody.append($template);
 
                     for (currentUser of response.results) {
                         //clone du modèle
                         var $row = $template.clone().removeAttr("id");
-
-                        console.log($row)
-
                         //remplissage du clone avec les données
-                        $row.children().first().text(currentUser.name.first + " " + currentUser.name.last)
+                        $row.children()
+                            .first().text(currentUser.name.first + " " + currentUser.name.last)
                             .next().text(currentUser.email)
                             .next().text(currentUser.phone)
-                            .next().text(currentUser.location.street.number + " " +
+                            .next().text(
                                 currentUser.location.street.number + " " +
                                 currentUser.location.street.name + " " +
                                 currentUser.location.postcode + " " +
                                 currentUser.location.city
                             );
 
+                        //console.log($row);
 
-
-                        //insertion de a nouvelle ligne en tbody
+                        //insertion de la nouvelle ligne dans le nouveau tbody
                         $newTbody.append($row);
-
                     }
-                    //remplacement de l ancien element par le nouveau
-                    $tbody.replaceWith($newTbody);
 
+                    //remplacement de l'ancien tbody par le nouveau
+                    $tbody.replaceWith($newTbody);
                 });
+
+                $.get("https://opendata.paris.fr/api/records/1.0/search/?dataset=que-faire-a-paris-&facet=category&facet=tags&facet=address_zipcode&facet=address_city&facet=pmr&facet=blind&facet=deaf&facet=access_type&facet=price_type&rows=100",
+                    function(data) {
+                        console.log(data);
+                    });
 
             });
 
 
 
-
-
+            console.log("fin du script");
 
         });
-
-
     </script>
 
     <style>
         #rowTemplate {
-            display: none
+            display: none;
         }
     </style>
 </head>
@@ -133,50 +122,49 @@
                 <option value="IE">Irlandaise</option>
                 <option value="ES">Espagnole</option>
             </select>
-            <div>
-                <label for="numberOfResults">Nombre de personnes</label>
-                <select id="numberOfResults">
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                    <option>40</option>
-                    <option>50</option>
-                </select>
-            </div>
         </div>
-        <button type="sudmit">Valider</button>
+        <div>
+            <label for="numberOfResults">Nombre de personnes</label>
+            <select id="numberOfResults">
+                <option>10</option>
+                <option>20</option>
+                <option>30</option>
+                <option>40</option>
+                <option>50</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Valider</button>
+        </div>
     </form>
 
-
-    <body>
-        <div id="infos">
-            <h1></h1>
-            <p></p>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>email</th>
-                    <th>tel</th>
-                    <th>adresse</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr id="rowTemplate">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-
-                </tr>
-            </tbody>
-        </table>
+    <div id="infos">
+        <h1></h1>
+        <p></p>
+    </div>
 
 
 
-    </body>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>email</th>
+                <th>tel</th>
+                <th>adresse</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</body>
 
 </html>
